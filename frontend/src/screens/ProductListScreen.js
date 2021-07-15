@@ -4,7 +4,12 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.js";
 import Loader from "../components/Loader.js";
-import { deleteProduct, listProducts } from "../actions/productsActions.js";
+import {
+  createProduct,
+  deleteProduct,
+  listProducts,
+} from "../actions/productsActions.js";
+import { PRODUCT_CREATE_RESET } from "../constants/productConstants.js";
 
 const ProductListScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -19,23 +24,42 @@ const ProductListScreen = ({ history }) => {
     success: successDelete,
     error: errorDelete,
   } = productDelete;
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    loading: loadingCreate,
+    success: successCreate,
+    error: errorCreate,
+    product: createdProduct,
+  } = productCreate;
 
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
     } else if (userInfo.isAdmin) {
-      dispatch(listProducts());
+      if (successCreate) {
+        dispatch({ type: PRODUCT_CREATE_RESET });
+        history.push(`/admin/products/${createdProduct._id}/edit`);
+      } else {
+        dispatch(listProducts());
+      }
     } else {
       history.push("/");
     }
-  }, [dispatch, history, userInfo, successDelete]);
+  }, [
+    dispatch,
+    history,
+    userInfo,
+    successDelete,
+    successCreate,
+    createdProduct,
+  ]);
 
   const deleteProductHandler = (id) => {
     dispatch(deleteProduct(id));
   };
 
   const createProductHandler = (product) => {
-    //create product
+    dispatch(createProduct());
   };
 
   return (
@@ -52,6 +76,8 @@ const ProductListScreen = ({ history }) => {
       </Row>
       {loadingDelete && <Loader></Loader>}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+      {loadingCreate && <Loader></Loader>}
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (

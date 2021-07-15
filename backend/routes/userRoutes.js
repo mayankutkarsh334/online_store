@@ -14,12 +14,13 @@ import { admin, protect } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 router.route("/").post(userRegister).get(protect, admin, getUsers);
+router.route("/profile").get(protect, getUser).put(protect, updateUserProfile);
+router.route("/login").post(userAuth);
+
 router
   .route("/:id")
   .delete(protect, admin, deleteUser)
   .get(protect, admin, getUserById)
   .put(protect, admin, updateUser);
-router.route("/login").post(userAuth);
-router.route("/profile").get(protect, getUser).put(protect, updateUserProfile);
 
 export default router;
