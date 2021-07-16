@@ -1,14 +1,18 @@
 import express from "express";
+import path from "path";
+import morgan from "morgan";
 import connectDB from "./config/db.js";
 import productRouter from "./routes/productRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import orderRouter from "./routes/orderRoutes.js";
+import uploadRouter from "./routes/uploadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 const app = express();
 
-// console.log(process.env.DB_URL);
 connectDB();
+
+app.use(morgan("dev"));
 app.use(express.json());
 app.get("/", (req, res) => {
   res.send("home page");
@@ -17,6 +21,10 @@ app.get("/", (req, res) => {
 app.use("/api/products", productRouter);
 app.use("/api/user", userRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/upload", uploadRouter);
+
+const __dirname = path.resolve();
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 const PAYPAL_CLIENT_ID =
   "AYiRc1nqttsH-2zROzeRHuOg7wqWmmtiPW65bdGaETCJC_oO_rKCH8d9Vvnkx2wazB5Yx3_uId2isjSN";

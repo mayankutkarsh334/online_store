@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import FormContainer from "../components/FormContainer.js";
 import { Form, Button } from "react-bootstrap";
@@ -20,6 +21,7 @@ const ProductEditScreen = ({ match, history }) => {
   const [description, setDescription] = useState("");
   const [countInStock, setCountInStock] = useState(0);
   const [image, setImage] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
@@ -64,6 +66,30 @@ const ProductEditScreen = ({ match, history }) => {
         price,
       })
     );
+  };
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      console.log(formData);
+      const { data } = await axios.post("/api/upload", formData, config);
+      console.log(data);
+      setImage(data);
+      setUploading(false);
+    } catch (error) {
+      console.log("hi");
+      console.log(error);
+      setUploading(false);
+    }
   };
 
   return (
@@ -142,6 +168,13 @@ const ProductEditScreen = ({ match, history }) => {
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               />
+              <Form.File
+                type="image-file"
+                label="Choose File"
+                custom
+                onChange={uploadFileHandler}
+              ></Form.File>
+              {uploading && <Loader></Loader>}
             </Form.Group>
             <Button className="mt-3" type="submit" variant="primary">
               Update
