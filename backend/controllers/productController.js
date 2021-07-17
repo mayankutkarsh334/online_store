@@ -10,8 +10,17 @@ export const getProducts = asyncHandler(async (req, res) => {
         },
       }
     : {};
-  const products = await Product.find({ ...keyword });
-  res.json(products);
+  const page = Number(req.query.pageNumber) || 1;
+  const pageSize = 3;
+
+  const productCount = await Product.countDocuments({ ...keyword });
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  const pages = Math.ceil(productCount / pageSize);
+
+  res.json({ products, page, pages });
 });
 
 export const getTopProducts = asyncHandler(async (req, res) => {

@@ -7,6 +7,7 @@ import { getUserDetails, updateUser } from "../actions/userActions.js";
 import Message from "../components/Message.js";
 import Loader from "../components/Loader.js";
 import { USER_UPDATE_RESET } from "../constants/userConstants.js";
+import Meta from "../components/Meta.js";
 
 const UserEditScreen = ({ match, history }) => {
   const userId = match.params.id;
@@ -52,6 +53,7 @@ const UserEditScreen = ({ match, history }) => {
 
   return (
     <>
+      <Meta title="Edit your User"></Meta>
       <FormContainer>
         <Link to="/admin/users">GO BACK</Link>
         <h3>Edit User</h3>

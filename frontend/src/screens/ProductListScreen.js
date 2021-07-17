@@ -10,12 +10,15 @@ import {
   listProducts,
 } from "../actions/productsActions.js";
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants.js";
+import Meta from "../components/Meta.js";
+import Paginate from "../components/Paginate.js";
 
-const ProductListScreen = ({ history }) => {
+const ProductListScreen = ({ history, match }) => {
+  const pageNumber = match.params.pageNumber;
   const dispatch = useDispatch();
 
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const { loading, error, products, page, pages } = productList;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const productDelete = useSelector((state) => state.productDelete);
@@ -40,7 +43,7 @@ const ProductListScreen = ({ history }) => {
         dispatch({ type: PRODUCT_CREATE_RESET });
         history.push(`/admin/products/${createdProduct._id}/edit`);
       } else {
-        dispatch(listProducts());
+        dispatch(listProducts("", pageNumber));
       }
     } else {
       history.push("/");
@@ -52,6 +55,7 @@ const ProductListScreen = ({ history }) => {
     successDelete,
     successCreate,
     createdProduct,
+    pageNumber,
   ]);
 
   const deleteProductHandler = (id) => {
@@ -64,6 +68,7 @@ const ProductListScreen = ({ history }) => {
 
   return (
     <>
+      <Meta title="Product List"></Meta>
       <Row className="align-items-center">
         <Col>
           <h1>PRODUCTS</h1>
@@ -123,6 +128,7 @@ const ProductListScreen = ({ history }) => {
           </tbody>
         </Table>
       )}
+      <Paginate page={page} pages={pages} isAdmin={true}></Paginate>
     </>
   );
 };

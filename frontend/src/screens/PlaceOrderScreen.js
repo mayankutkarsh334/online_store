@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
 import { createOrder } from "../actions/orderActions";
+import Meta from "../components/Meta";
 
 const PlaceOrderScreen = ({ history }) => {
   const cart = useSelector((state) => state.cart);
@@ -49,6 +50,7 @@ const PlaceOrderScreen = ({ history }) => {
 
   return (
     <>
+      <Meta title="Place your Order"></Meta>
       <CheckoutSteps step1 step2 step3 step4 />
       <Row>
         <Col md={8}>

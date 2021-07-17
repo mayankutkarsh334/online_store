@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, getUsers } from "../actions/userActions.js";
 import Message from "../components/Message.js";
 import Loader from "../components/Loader.js";
+import Meta from "../components/Meta.js";
 
 const UsersListScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const UsersListScreen = ({ history }) => {
 
   return (
     <>
+      <Meta title="User List"></Meta>
       <h2>My Users</h2>
       {loading ? (
         <Loader />

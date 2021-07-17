@@ -11,6 +11,7 @@ import {
   PRODUCT_DETAILS_RESET,
   PRODUCT_UPDATE_RESET,
 } from "../constants/productConstants.js";
+import Meta from "../components/Meta.js";
 
 const ProductEditScreen = ({ match, history }) => {
   const productId = match.params.id;
@@ -94,6 +95,7 @@ const ProductEditScreen = ({ match, history }) => {
 
   return (
     <>
+      <Meta title="Edit your Product"></Meta>
       <FormContainer>
         <Link to="/admin/productList">GO BACK</Link>
         <h3>Edit product</h3>

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../actions/userActions.js";
 import Message from "../components/Message.js";
 import Loader from "../components/Loader.js";
+import Meta from "../components/Meta.js";
 
 const LoginScreen = ({ location, history }) => {
   const [email, setEmail] = useState("");
@@ -28,41 +29,44 @@ const LoginScreen = ({ location, history }) => {
   };
 
   return (
-    <FormContainer>
-      {error && <Message variant="danger">{error}</Message>}
-      {loading && <Loader />}
-      <Form onSubmit={submitHandler}>
-        <Form.Group className="mt-3" controlId="email">
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mt-3" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
-        <Button className="mt-3" type="submit" variant="primary">
-          Sign In
-        </Button>
-      </Form>
-      <Row className="py-3">
-        <Col>
-          New Customer?{" "}
-          <Link to={redirect ? `/register?=${redirect}` : "/register"}>
-            Register
-          </Link>
-        </Col>
-      </Row>
-    </FormContainer>
+    <>
+      <Meta title="Login" />
+      <FormContainer>
+        {error && <Message variant="danger">{error}</Message>}
+        {loading && <Loader />}
+        <Form onSubmit={submitHandler}>
+          <Form.Group className="mt-3" controlId="email">
+            <Form.Label>Email Address</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group className="mt-3" controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Form.Group>
+          <Button className="mt-3" type="submit" variant="primary">
+            Sign In
+          </Button>
+        </Form>
+        <Row className="py-3">
+          <Col>
+            New Customer?{" "}
+            <Link to={redirect ? `/register?=${redirect}` : "/register"}>
+              Register
+            </Link>
+          </Col>
+        </Row>
+      </FormContainer>
+    </>
   );
 };
 
