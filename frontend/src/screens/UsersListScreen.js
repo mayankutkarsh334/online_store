@@ -67,13 +67,13 @@ const UsersListScreen = ({ history }) => {
                 </td>
                 <td>
                   <LinkContainer to={`/admin/users/${user._id}/edit`}>
-                    <Button variant="light">
+                    <Button variant="light" className="btn-sm">
                       <i className="fas fa-edit"></i>
                     </Button>
                   </LinkContainer>
                   <Button
                     variant="danger"
-                    className="btn-sm"
+                    className="btn-sm ms-3"
                     onClick={() => {
                       deleteUserHandler(user._id);
                     }}

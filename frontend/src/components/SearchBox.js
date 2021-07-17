@@ -29,7 +29,7 @@ const SearchBox = ({ history }) => {
           type="submit"
           variant="outline-success"
           className="p-2 ms-2"
-          style={{ height: "100%" }}
+          style={{ height: "50px" }}
         >
           Search
         </Button>

@@ -46,21 +46,24 @@ const CartScreen = ({ match, history, location }) => {
               Cart is Empty <Link to="/">GO BACK</Link>
             </Message>
           ) : (
-            <ListGroup variant="flush">
+            <ListGroup variant="flush" className="mb-3">
               {cartItems.map((item) => (
-                <ListGroup.Item key={item.product}>
+                <ListGroup.Item key={item.product} className="mb-3">
                   <Row>
-                    <Col md={3}>
+                    <Col md={3} className="mb-2">
                       <Image src={item.image} fluid rounded></Image>
                     </Col>
                     <Col md={3}>
                       <Link to={`/products/${item.product}`}>{item.name}</Link>
                     </Col>
-                    <Col md={2}>{item.price}</Col>
+                    <Col md={2} className="mb-2">
+                      ${item.price}
+                    </Col>
                     <Col md={2}>
                       <Form.Control
                         as="select"
                         value={item.qty}
+                        className="mb-2"
                         onChange={(event) =>
                           dispatch(
                             addToCart(item.product, Number(event.target.value))

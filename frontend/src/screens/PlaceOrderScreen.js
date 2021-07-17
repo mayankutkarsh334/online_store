@@ -6,6 +6,7 @@ import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
 import { createOrder } from "../actions/orderActions";
 import Meta from "../components/Meta";
+import { ORDER_CREATE_RESET } from "../constants/orderConstants";
 
 const PlaceOrderScreen = ({ history }) => {
   const cart = useSelector((state) => state.cart);
@@ -14,13 +15,19 @@ const PlaceOrderScreen = ({ history }) => {
 
   const dispatch = useDispatch();
 
-  cart.itemsPrice = cartItems
-    .reduce((acc, item) => acc + item.price * item.qty, 0)
-    .toFixed(2);
-  cart.shippingPrice = cart.itemsPrice > 100 ? 0 : 100;
-  cart.taxPrice = Number(cart.itemsPrice * 0.15).toFixed(2);
-  cart.totalPrice = Number(
-    Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)
+  const addDecimals = (num) => {
+    return (Math.round(num * 100) / 100).toFixed(2);
+  };
+
+  cart.itemsPrice = addDecimals(
+    cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+  );
+  cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 40 : 0);
+  cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
+  cart.totalPrice = (
+    Number(cart.itemsPrice) +
+    Number(cart.shippingPrice) +
+    Number(cart.taxPrice)
   ).toFixed(2);
 
   const orderCreate = useSelector((state) => state.orderCreate);
@@ -28,10 +35,11 @@ const PlaceOrderScreen = ({ history }) => {
 
   useEffect(() => {
     if (success) {
+      dispatch({ type: ORDER_CREATE_RESET });
       history.push(`/orders/${order._id}`);
     }
     // eslint-disable-next-line
-  }, [history, success]);
+  }, [dispatch, history, success]);
 
   const placeOrderHandler = (e) => {
     e.preventDefault();
@@ -53,7 +61,7 @@ const PlaceOrderScreen = ({ history }) => {
       <Meta title="Place your Order"></Meta>
       <CheckoutSteps step1 step2 step3 step4 />
       <Row>
-        <Col md={8}>
+        <Col md={8} className="mb-3">
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h1>SHIPPING</h1>
@@ -106,25 +114,25 @@ const PlaceOrderScreen = ({ history }) => {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>{cart.itemsPrice}</Col>
+                  <Col>${cart.itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>{cart.shippingPrice}</Col>
+                  <Col>${cart.shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Tax</Col>
-                  <Col>{cart.taxPrice}</Col>
+                  <Col>${cart.taxPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Total</Col>
-                  <Col>{cart.totalPrice}</Col>
+                  <Col>${cart.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
               {error && (

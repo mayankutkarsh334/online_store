@@ -64,7 +64,7 @@ const ProfileScreen = ({ location, history }) => {
     <>
       <Meta title="Profile"></Meta>
       <Row>
-        <Col md={3}>
+        <Col md={3} className="mb-3">
           <h2>Update Profile</h2>
           {message && <Message variant="danger">{message}</Message>}
           {error && <Message variant="danger">{error}</Message>}

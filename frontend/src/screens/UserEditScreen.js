@@ -24,8 +24,13 @@ const UserEditScreen = ({ match, history }) => {
     error: errorUpdate,
     success: successUpdate,
   } = userUpdate;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    }
     if (successUpdate) {
       dispatch({ type: USER_UPDATE_RESET });
       history.push("/admin/users");
@@ -37,7 +42,7 @@ const UserEditScreen = ({ match, history }) => {
       setEmail(user.email);
       setIsAdmin(user.isAdmin);
     }
-  }, [dispatch, user, userId, history, successUpdate]);
+  }, [dispatch, user, userId, history, successUpdate, userInfo]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -55,7 +60,7 @@ const UserEditScreen = ({ match, history }) => {
     <>
       <Meta title="Edit your User"></Meta>
       <FormContainer>
-        <Link to="/admin/users">GO BACK</Link>
+        <Link to="/admin/userList">GO BACK</Link>
         <h3>Edit User</h3>
         {loadingUpdate && <Loader></Loader>}
         {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}

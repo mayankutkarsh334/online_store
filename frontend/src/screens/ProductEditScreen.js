@@ -33,8 +33,13 @@ const ProductEditScreen = ({ match, history }) => {
     error: errorUpdate,
     success: successUpdate,
   } = productUpdate;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    }
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
       dispatch({ type: PRODUCT_DETAILS_RESET });
@@ -51,7 +56,7 @@ const ProductEditScreen = ({ match, history }) => {
       setImage(product.image);
       setPrice(product.price);
     }
-  }, [dispatch, product, productId, history, successUpdate]);
+  }, [dispatch, product, productId, history, successUpdate, userInfo]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -71,24 +76,22 @@ const ProductEditScreen = ({ match, history }) => {
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
     const formData = new FormData();
     formData.append("image", file);
     setUploading(true);
+
     try {
       const config = {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       };
-      console.log(formData);
+
       const { data } = await axios.post("/api/upload", formData, config);
-      console.log(data);
       setImage(data);
       setUploading(false);
     } catch (error) {
-      console.log("hi");
-      console.log(error);
+      console.error(error.message);
       setUploading(false);
     }
   };
@@ -107,7 +110,7 @@ const ProductEditScreen = ({ match, history }) => {
           <Message variant="danger">{error}</Message>
         ) : (
           <Form onSubmit={submitHandler}>
-            <Form.Group className="mt-3" controlId="name">
+            <Form.Group controlId="name">
               <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
@@ -116,7 +119,7 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setName(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mt-3" controlId="brand">
+            <Form.Group controlId="brand">
               <Form.Label>Brand</Form.Label>
               <Form.Control
                 type="text"
@@ -125,7 +128,7 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setBrand(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mt-3" controlId="category">
+            <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
               <Form.Control
                 type="text"
@@ -134,7 +137,7 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setCategory(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mt-3" controlId="price">
+            <Form.Group controlId="price">
               <Form.Label>Price</Form.Label>
               <Form.Control
                 type="Number"
@@ -143,7 +146,7 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setPrice(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mt-3" controlId="description">
+            <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
               <Form.Control
                 as="textarea"
@@ -153,7 +156,7 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setDescription(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mt-3" controlId="countInStock">
+            <Form.Group controlId="countInStock">
               <Form.Label>Count In Stock</Form.Label>
               <Form.Control
                 type="Number"
@@ -162,22 +165,24 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setCountInStock(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mt-3" controlId="image">
+            <Form.Group controlId="image">
               <Form.Label>Image</Form.Label>
-              <Form.Control
+              {/* <Form.Control
                 type="text"
-                placeholder="Enter the Image URL"
+                placeholder="Enter image url"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
-              />
+              ></Form.Control> */}
               <Form.File
-                type="image-file"
+                id="image-file"
                 label="Choose File"
+                name="image"
                 custom
                 onChange={uploadFileHandler}
               ></Form.File>
-              {uploading && <Loader></Loader>}
+              {uploading && <Loader />}
             </Form.Group>
+
             <Button className="mt-3" type="submit" variant="primary">
               Update
             </Button>

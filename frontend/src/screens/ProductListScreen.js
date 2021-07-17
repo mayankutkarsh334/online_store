@@ -70,10 +70,10 @@ const ProductListScreen = ({ history, match }) => {
     <>
       <Meta title="Product List"></Meta>
       <Row className="align-items-center">
-        <Col>
+        <Col md={6}>
           <h1>PRODUCTS</h1>
         </Col>
-        <Col className="justify-content-end">
+        <Col md={{ span: 3, offset: 3 }}>
           <Button className="my-3" onClick={createProductHandler}>
             <i className="fas fa-plus"></i> CREATE PRODUCT
           </Button>
@@ -109,13 +109,13 @@ const ProductListScreen = ({ history, match }) => {
                 <td>{product.brand}</td>
                 <td>
                   <LinkContainer to={`/admin/products/${product._id}/edit`}>
-                    <Button variant="light">
+                    <Button variant="light" className="btn-sm">
                       <i className="fas fa-edit"></i>
                     </Button>
                   </LinkContainer>
                   <Button
                     variant="danger"
-                    className="btn-sm"
+                    className="btn-sm ms-3"
                     onClick={() => {
                       deleteProductHandler(product._id);
                     }}

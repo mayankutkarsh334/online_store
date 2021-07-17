@@ -53,7 +53,7 @@ const ProductScreen = ({ history, match }) => {
 
   return (
     <>
-      <Link to="/" className="btn btn-light">
+      <Link to="/" className="btn btn-light mb-3">
         Go Back
       </Link>
       {loading ? (
@@ -142,7 +142,7 @@ const ProductScreen = ({ history, match }) => {
               <h1>REVIEWS</h1>
               <ListGroup variant="flush">
                 {product.reviews.map((review) => (
-                  <ListGroup.Item>
+                  <ListGroup.Item key={review._id}>
                     <strong>{review.name}</strong>
                     <Rating value={review.rating}></Rating>
                     <p>{review.createdAt.substring(0, 10)}</p>
