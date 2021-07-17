@@ -1,4 +1,5 @@
 import express from "express";
+import dotenv from "dotenv";
 import path from "path";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
@@ -9,10 +10,15 @@ import uploadRouter from "./routes/uploadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 const app = express();
+const __dirname = path.resolve();
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 connectDB();
 
-app.use(morgan("dev"));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
 app.use(express.json());
 app.get("/", (req, res) => {
   res.send("home page");
@@ -23,11 +29,9 @@ app.use("/api/user", userRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/upload", uploadRouter);
 
-const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
-const PAYPAL_CLIENT_ID =
-  "AYiRc1nqttsH-2zROzeRHuOg7wqWmmtiPW65bdGaETCJC_oO_rKCH8d9Vvnkx2wazB5Yx3_uId2isjSN";
+const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 app.get("/api/config/paypal", (req, res) => {
   res.send(PAYPAL_CLIENT_ID);
 });
@@ -35,6 +39,5 @@ app.get("/api/config/paypal", (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
-// console.log(process.env.PORT);
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`Server running on port ${PORT}`));
