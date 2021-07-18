@@ -10,8 +10,8 @@ import uploadRouter from "./routes/uploadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 const app = express();
-const __dirname = path.resolve();
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
+dotenv.config();
 
 connectDB();
 
@@ -20,21 +20,31 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use(express.json());
-app.get("/", (req, res) => {
-  res.send("home page");
-});
 
 app.use("/api/products", productRouter);
 app.use("/api/user", userRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/upload", uploadRouter);
 
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
-
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 app.get("/api/config/paypal", (req, res) => {
   res.send(PAYPAL_CLIENT_ID);
 });
+
+const __dirname = path.resolve();
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running....");
+  });
+}
 
 app.use(notFound);
 app.use(errorHandler);

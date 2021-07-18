@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ORDER_MY_LIST_RESET } from "../constants/orderConstants";
+import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
 import {
   USER_DELETE_FAIL,
   USER_DELETE_REQUEST,
@@ -23,6 +24,7 @@ import {
   USER_UPDATE_FAIL,
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_REQUEST,
+  USER_UPDATE_PROFILE_RESET,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
@@ -87,6 +89,8 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: ORDER_MY_LIST_RESET });
   dispatch({ type: USER_LIST_RESET });
+  dispatch({ type: USER_UPDATE_PROFILE_RESET });
+  dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
   localStorage.removeItem("userInfo");
 };
 
